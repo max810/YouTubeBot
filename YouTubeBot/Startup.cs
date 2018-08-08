@@ -8,14 +8,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using YouTubeBot.ConfigurationProviders;
 
 namespace YouTubeBot
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration config)
         {
-            Configuration = configuration;
+            Configuration = config;
         }
 
         public IConfiguration Configuration { get; }
@@ -24,16 +25,23 @@ namespace YouTubeBot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.Configure<NgrokConfig>(Configuration.GetSection("Ngrok"));
+            // not necessary, but i choose another options file
+            services.AddLogging(builder
+                => builder
+                .AddConfiguration(Configuration.GetSection("Logging"))
+                .AddConsole()
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Проверить, как будет работать inactivity interval
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseMvc();
         }
     }

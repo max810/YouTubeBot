@@ -19,6 +19,14 @@ namespace YouTubeBot
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((builderContext, config) =>
+                {
+                    IHostingEnvironment env = builderContext.HostingEnvironment;
+
+                    // later ones will override earlier
+                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                    config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                })
                 .UseStartup<Startup>()
                 .Build();
     }

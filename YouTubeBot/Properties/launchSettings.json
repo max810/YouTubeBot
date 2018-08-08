@@ -19,7 +19,7 @@
     "YouTubeBot": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "api/youtubebot",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
