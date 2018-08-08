@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace YouTubeBot.ConfigurationProviders
 {
-    public class NgrokConfig
+    public class LocalDebugConfig
     {
-        public string Http { get; set; }
-        public string Https { get; set; }
+        public bool IsLocalDebug { get; set; }
+        public string HttpsUri { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Telegram.Bot;
 using YouTubeBot.ConfigurationProviders;
 
 namespace YouTubeBot
@@ -25,8 +26,12 @@ namespace YouTubeBot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.Configure<NgrokConfig>(Configuration.GetSection("Ngrok"));
-            // not necessary, but i choose another options file
+
+            string botToken = Configuration.GetSection("YouTubeBot").GetValue<string>("Token");
+            services.AddSingleton(typeof(ITelegramBotClient), new TelegramBotClient(botToken));
+            services.Configure<LocalDebugConfig>(Configuration.GetSection("LocalDebug"));
+
+            // not necessary, maybe i'll change Logging to smth else
             services.AddLogging(builder
                 => builder
                 .AddConfiguration(Configuration.GetSection("Logging"))
@@ -42,7 +47,10 @@ namespace YouTubeBot
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute("default", "{controller=YouTubeBot}/{action=Update}");
+            });
         }
     }
 }

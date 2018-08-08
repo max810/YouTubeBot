@@ -264,3 +264,4 @@ __pycache__/
 appsettings.json
 Properties/
 [Tt][Oo][Dd][Oo].*
+local.json
