@@ -30,6 +30,7 @@ namespace YouTubeBot
             string botToken = Configuration.GetSection("YouTubeBot").GetValue<string>("Token");
             services.AddSingleton(typeof(ITelegramBotClient), new TelegramBotClient(botToken));
             services.Configure<LocalDebugConfig>(Configuration.GetSection("LocalDebug"));
+            services.Configure<VideoDownloadConfig>(Configuration.GetSection("VideoDownloadConfig"));
 
             // not necessary, maybe i'll change Logging to smth else
             services.AddLogging(builder

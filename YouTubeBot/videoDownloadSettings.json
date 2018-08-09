@@ -1,0 +1,40 @@
+﻿{
+  "VideoDownloadConfig": {
+
+    "VideoProviders": [
+      {
+        "Name": "providerName1",
+        "FileTypesInfo": [
+          {
+            "FileType": "mp4",
+            "DownloadLinksInfo": [
+              {
+                "Description": "720p",
+                "CSSSelector": "720_css_selector"
+              },
+              {
+                "Description": "480p",
+                "CSSSelector": "480_css_selector"
+              }
+              // check for duplicate
+            ]
+          },
+          {
+            "FileType": "mp3",
+            "DownloadLinksInfo": [
+              {
+                "Description": "mp3_(128kbps)",
+                "CSSSelector": "mp3_(128kbps)_css_selector"
+              }
+            ]
+          }
+        ]
+      }
+      //, 
+      //insert new provider here
+      // {"Name" : "providerName2", "FileTypesInfo" : []}
+      //}
+    ]
+
+  }
+}

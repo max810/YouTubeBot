@@ -22,9 +22,11 @@ namespace YouTubeBot.Controllers
         private ITelegramBotClient bot;
         private string CurrentHostUri;
         private IHostingEnvironment env;
+        private VideoDownloadConfig downloadLinks;
 
         public YouTubeBotController(ILogger<YouTubeBotController> _logger,
             IOptions<LocalDebugConfig> options,
+            IOptions<VideoDownloadConfig> linksOptions,
             IHostingEnvironment environment,
             ITelegramBotClient botClient)
         {
@@ -33,6 +35,10 @@ namespace YouTubeBot.Controllers
 
             bot = botClient;
             env = environment;
+
+            downloadLinks = linksOptions.Value;
+            // it works should be '720p'
+            logger.LogCritical((downloadLinks.VideoProviders[0].FileTypesInfo[0].DownloadLinksInfo[0].Description).ToString());
             //logger.LogWarning(env.IsDevelopment().ToString());
         }
 

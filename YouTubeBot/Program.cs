@@ -27,6 +27,7 @@ namespace YouTubeBot
                     config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
                     config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile($"local.json", optional: false); // bot settings - currently only token
+                    config.AddJsonFile("videoDownloadSettings.json", optional: false);
                 })
                 .UseStartup<Startup>()
                 .Build();
