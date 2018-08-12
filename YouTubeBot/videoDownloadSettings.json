@@ -3,18 +3,20 @@
 
     "VideoProviders": [
       {
-        "Name": "providerName1",
+        "UrlFormat": "https://y2mate.com/ru/youtube/{0}",
         "FileTypesInfo": [
           {
             "FileType": "mp4",
             "DownloadLinksInfo": [
               {
-                "Description": "720p",
-                "CSSSelector": "720_css_selector"
+                "DownloadCSSSelector": "720_download_selector",
+                "DescriptionCSSSelector": "720_description_selector",
+                "FileSizeCSSSelector": "720_filesize_selector"
               },
               {
-                "Description": "480p",
-                "CSSSelector": "480_css_selector"
+                "DownloadCSSSelector": "480_download_selector",
+                "DescriptionCSSSelector": "480_description_selector",
+                "FileSizeCSSSelector": "480_filesize_selector"
               }
               // check for duplicate
             ]
@@ -23,14 +25,17 @@
             "FileType": "mp3",
             "DownloadLinksInfo": [
               {
-                "Description": "mp3_(128kbps)",
-                "CSSSelector": "mp3_(128kbps)_css_selector"
+                "DownloadCSSSelector": "mp3_(128kbps)_download_selector",
+                "DescriptionCSSSelector": "mp3_(128kbps)_description_selector",
+                "FileSizeCSSSelector": "mp3_(128kbps)_filesize_selector"
               }
             ]
           }
         ]
       }
-      //, 
+      // "https://qdownloader.net/download?video={0}";
+      // this is faster "https://qdownloader.net/download?video=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D";
+      //,
       //insert new provider here
       // {"Name" : "providerName2", "FileTypesInfo" : []}
       //}

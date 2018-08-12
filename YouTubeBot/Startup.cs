@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +30,7 @@ namespace YouTubeBot
 
             string botToken = Configuration.GetSection("YouTubeBot").GetValue<string>("Token");
             services.AddSingleton(typeof(ITelegramBotClient), new TelegramBotClient(botToken));
+            services.AddScoped<HttpClient>();
             services.Configure<LocalDebugConfig>(Configuration.GetSection("LocalDebug"));
             services.Configure<VideoDownloadConfig>(Configuration.GetSection("VideoDownloadConfig"));
 

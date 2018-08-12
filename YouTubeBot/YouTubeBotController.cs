@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,33 +20,36 @@ namespace YouTubeBot.Controllers
     public class YouTubeBotController : Controller
     {
         private ILogger<YouTubeBotController> logger;
-        private LocalDebugConfig localDebugConfig;
+        private LocalDebugConfig localDebugSettings;
         private ITelegramBotClient bot;
         private string CurrentHostUri;
         private IHostingEnvironment env;
-        private VideoDownloadConfig downloadLinks;
+        private VideoDownloadConfig videoDownloadSettings;
+        private YoutubeVideoDownloader videoDownloader;
 
         public YouTubeBotController(ILogger<YouTubeBotController> _logger,
-            IOptions<LocalDebugConfig> options,
-            IOptions<VideoDownloadConfig> linksOptions,
+            IOptions<LocalDebugConfig> localDebugOptions,
+            IOptions<VideoDownloadConfig> videoDownloadOptions,
             IHostingEnvironment environment,
-            ITelegramBotClient botClient)
+            ITelegramBotClient botClient,
+            HttpClient httpClient)
         {
             logger = _logger;
-            localDebugConfig = options.Value;
+            localDebugSettings = localDebugOptions.Value;
 
             bot = botClient;
             env = environment;
 
-            downloadLinks = linksOptions.Value;
-            // it works should be '720p'
-            logger.LogCritical((downloadLinks.VideoProviders[0].FileTypesInfo[0].DownloadLinksInfo[0].Description).ToString());
+            videoDownloadSettings = videoDownloadOptions.Value;
+
+            // it works; should be '720p'
+            //logger.LogCritical((videoDownloadSettings.VideoProviders[0].FileTypesInfo[0].DownloadLinksInfo[0].Description).ToString());
             //logger.LogWarning(env.IsDevelopment().ToString());
         }
 
         [HttpPost]
         [Route("update")]
-        public void Update([FromBody] Update update)
+        public async void Update([FromBody] Update update)
         {
             /*
              * try{}
@@ -72,6 +77,12 @@ namespace YouTubeBot.Controllers
                 }
 
                 string fullUrl = "https://www." + update.Message.Text.StripUrl();
+                string videoID = GetVideoID(fullUrl);
+
+                var links = await YoutubeVideoDownloader.GetDownloadLinksAsync(videoDownloadSettings, videoID, OnNotLoading);
+
+                // format links
+                // send response
 
                 //bot.SendPhotoAsync()
 
@@ -102,10 +113,35 @@ namespace YouTubeBot.Controllers
             AssureValidUri(link);
 
             string rawAddress = link.StripUrl();
-            if (!Regex.IsMatch(rawAddress, @"^youtube\.com\/watch\?v=.{11}&*$"))
+            // can pass any attributes
+            if (!Regex.IsMatch(rawAddress, @"^youtube\.com\/watch\?v=.{11}.*$"))
             {
                 throw new UriFormatException($"This is not a valid youtube video link: {link}");
             }
+        }
+
+        private void OnNotLoading()
+        {
+            // send "Loading..."
+        }
+
+        private string GetVideoID(string url)
+        {
+            string query = url.Split('?')[1];
+
+            foreach(var part in query.Split('&'))
+            {
+                string[] kv = part.Split('=');
+                string key = kv[0];
+                string value = kv[1];
+
+                if(key == "v")
+                {
+                    return value;
+                }
+            }
+
+            throw new ArgumentException("No video id found");
         }
 
         private void AssureTextMessage(Message message)
@@ -150,10 +186,10 @@ namespace YouTubeBot.Controllers
             {
                 hostUri = "https://" + hostUri;
             }
-            if (localDebugConfig.IsLocalDebug)
+            if (localDebugSettings.IsLocalDebug)
             {
                 // use for debugging with ngrok
-                hostUri = localDebugConfig.HttpsUri;
+                hostUri = localDebugSettings.HttpsUri;
             }
 
             object currentController = ControllerContext.RouteData.Values["controller"];

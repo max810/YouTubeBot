@@ -7,7 +7,7 @@ namespace YouTubeBot.Models
 {
     public class VideoProvider
     {
-        public string Name { get; set; }
+        public string UrlFormat { get; set; }
         public FileTypeInfo[] FileTypesInfo { get; set; }
     }
 }
