@@ -12,7 +12,7 @@ using HtmlAgilityPack.CssSelectors.NetCore;
 namespace YouTubeBot
 {
     // choose between static methods with parameters or pass everything in constructor and save
-    public class YoutubeVideoDownloader
+    public static class YoutubeVideoDownloader
     {
         public static event Action NotLoading;
 

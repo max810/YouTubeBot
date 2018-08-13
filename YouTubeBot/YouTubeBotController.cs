@@ -25,7 +25,6 @@ namespace YouTubeBot.Controllers
         private string CurrentHostUri;
         private IHostingEnvironment env;
         private VideoDownloadConfig videoDownloadSettings;
-        private YoutubeVideoDownloader videoDownloader;
 
         public YouTubeBotController(ILogger<YouTubeBotController> _logger,
             IOptions<LocalDebugConfig> localDebugOptions,
@@ -47,65 +46,94 @@ namespace YouTubeBot.Controllers
             //logger.LogWarning(env.IsDevelopment().ToString());
         }
 
+        [Route("launch")]
+        public string Launch()
+        {
+            if (!string.IsNullOrWhiteSpace(CurrentHostUri))
+            {
+                return "Bot is working";
+            }
+
+            string hostUri = Request.Host.Host;
+
+            if (!Request.IsHttps)
+            {
+                hostUri = "https://" + hostUri;
+            }
+            if (localDebugSettings.IsLocalDebug)
+            {
+                // use for debugging with ngrok
+                hostUri = localDebugSettings.HttpsUri;
+            }
+
+            object currentController = ControllerContext.RouteData.Values["controller"];
+            hostUri += $"/{currentController}/update";
+
+            CurrentHostUri = hostUri;
+
+            logger.LogCritical(hostUri);
+
+            return "Bot launched successfully";
+        }
+
         [HttpPost]
         [Route("update")]
         public async void Update([FromBody] Update update)
         {
-            /*
-             * try{}
-             * catch(){send sorry}
-             * send ok
-             */
-
-            //bot.SendTextMessageAsync(0, )
-            if (update.Type == UpdateType.Message)
+            if (update.Type != UpdateType.Message)
             {
-                try
-                {
-                    AssureTextMessage(update.Message);
-                    AssureValidYoutubeUrl(update.Message.Text);
-                }
-                catch (UriFormatException e)
-                {
-                    // reply "sorry invalid url, e.Message"
-                    return;
-                }
-                catch (ArgumentException e)
-                {
-                    // reply "don't understand"
-                    return;
-                }
-
-                string fullUrl = "https://www." + update.Message.Text.StripUrl();
-                string videoID = GetVideoID(fullUrl);
-
-                var links = await YoutubeVideoDownloader.GetDownloadLinksAsync(videoDownloadSettings, videoID, OnNotLoading);
-
-                // format links
-                // send response
-
-                //bot.SendPhotoAsync()
-
-                // get video info - { title, thumbnail }
-                // -> do (try get links) while (not successfull && not all services tried)
-                // get download links as IDictionary<key(e.g. "{? 3GP 360p 40.5 Mb }?"), value(url)>
-                // get formatted reply (title, thumbnail, links)
-                // write message with reply
-
-
-                // P.S. { ... } - one object
-
-
+                return;
             }
-            // main logic here
-            // + resolve message type
-            // + get url
-            // get high quality thumbnail
-            // get title
-            // get download links
-            // format links
-            // send thumbnail, title, inline buttons;
+
+            long chatId = update.Message.Chat.Id;
+
+            try
+            {
+                AssureTextMessage(update.Message);
+                if (string.Equals(update.Message.Text, "/start", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    await bot.SendTextMessageAsync(chatId, "Hello! This bot will download videos from YouTube for you.\nJust send me the link.");
+                    return;
+                }
+                AssureValidYoutubeUrl(update.Message.Text);
+            }
+            catch (UriFormatException e)
+            {
+                await bot.SendTextMessageAsync(chatId, "Sorry, the link you sent me was invalid.");
+                return;
+            }
+            catch (ArgumentException e)
+            {
+                await bot.SendTextMessageAsync(chatId, 
+                    "Sorry, I don't understand you.\n I _only_ understand links from **YouTube**", 
+                    ParseMode.Markdown);
+                return;
+            }
+
+            string fullUrl = "https://www." + update.Message.Text.StripUrl();
+            string videoID = GetVideoID(fullUrl);
+
+            var links = await YoutubeVideoDownloader
+                .GetDownloadLinksAsync(videoDownloadSettings, videoID, () => OnNotLoading(chatId));
+
+            var response = ResponseFormatter.GetFormattedResponse(links);
+
+            foreach (var kv in response)
+            {
+                await bot.SendTextMessageAsync(chatId, kv.Key, parseMode: ParseMode.Markdown, replyMarkup: kv.Value);
+            }
+
+            // get video info - { title, thumbnail }
         }
+        // main logic here
+        // + resolve message type
+        // + get url
+        // get high quality thumbnail
+        // get title
+        // get download links
+        // format links
+        // send thumbnail, title, inline buttons;
+
 
         private void AssureValidYoutubeUrl(string link)
         {
@@ -120,22 +148,22 @@ namespace YouTubeBot.Controllers
             }
         }
 
-        private void OnNotLoading()
+        private async void OnNotLoading(long chatId)
         {
-            // send "Loading..."
+            await bot.SendTextMessageAsync(chatId, "_Loading, please wait..._", ParseMode.Markdown);
         }
 
         private string GetVideoID(string url)
         {
             string query = url.Split('?')[1];
 
-            foreach(var part in query.Split('&'))
+            foreach (var part in query.Split('&'))
             {
                 string[] kv = part.Split('=');
                 string key = kv[0];
                 string value = kv[1];
 
-                if(key == "v")
+                if (key == "v")
                 {
                     return value;
                 }
@@ -168,38 +196,6 @@ namespace YouTubeBot.Controllers
             {
                 throw new UriFormatException($"Invalid video link: {uriString}");
             }
-        }
-
-        // GET api/values
-        [HttpGet]
-        [Route("launch")]
-        public string Launch()
-        {
-            if (!string.IsNullOrWhiteSpace(CurrentHostUri))
-            {
-                return "Bot is working";
-            }
-
-            string hostUri = Request.Host.Host;
-
-            if (!Request.IsHttps)
-            {
-                hostUri = "https://" + hostUri;
-            }
-            if (localDebugSettings.IsLocalDebug)
-            {
-                // use for debugging with ngrok
-                hostUri = localDebugSettings.HttpsUri;
-            }
-
-            object currentController = ControllerContext.RouteData.Values["controller"];
-            hostUri += $"/{currentController}/update";
-
-            CurrentHostUri = hostUri;
-
-            logger.LogCritical(hostUri);
-
-            return "Bot launched successfully";
         }
     }
 }
