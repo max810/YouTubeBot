@@ -22,33 +22,32 @@ namespace YouTubeBot.Controllers
         private ILogger<YouTubeBotController> logger;
         private LocalDebugConfig localDebugSettings;
         private ITelegramBotClient bot;
-        private string CurrentHostUri;
+        private static string CurrentHostUri;
         private IHostingEnvironment env;
         private VideoDownloadConfig videoDownloadSettings;
+        private BitLySettings bitLySettings;
 
         public YouTubeBotController(ILogger<YouTubeBotController> _logger,
             IOptions<LocalDebugConfig> localDebugOptions,
             IOptions<VideoDownloadConfig> videoDownloadOptions,
+            IOptions<BitLySettings> bitLyOptions,
             IHostingEnvironment environment,
             ITelegramBotClient botClient,
             HttpClient httpClient)
         {
-            logger = _logger;
             localDebugSettings = localDebugOptions.Value;
+            videoDownloadSettings = videoDownloadOptions.Value;
+            bitLySettings = bitLyOptions.Value;
 
+            logger = _logger;
             bot = botClient;
             env = environment;
-
-            videoDownloadSettings = videoDownloadOptions.Value;
-
-            // it works; should be '720p'
-            //logger.LogCritical((videoDownloadSettings.VideoProviders[0].FileTypesInfo[0].DownloadLinksInfo[0].Description).ToString());
-            //logger.LogWarning(env.IsDevelopment().ToString());
         }
 
         [Route("launch")]
         public string Launch()
         {
+            logger.LogCritical(CurrentHostUri);
             if (!string.IsNullOrWhiteSpace(CurrentHostUri))
             {
                 return "Bot is working";
@@ -71,7 +70,8 @@ namespace YouTubeBot.Controllers
 
             CurrentHostUri = hostUri;
 
-            logger.LogCritical(hostUri);
+            // add <token> to path
+            bot.SetWebhookAsync(CurrentHostUri).Wait();
 
             return "Bot launched successfully";
         }
@@ -87,6 +87,8 @@ namespace YouTubeBot.Controllers
 
             long chatId = update.Message.Chat.Id;
 
+            logger.LogCritical("Chat Id = " + chatId);
+
             try
             {
                 AssureTextMessage(update.Message);
@@ -97,15 +99,15 @@ namespace YouTubeBot.Controllers
                 }
                 AssureValidYoutubeUrl(update.Message.Text);
             }
-            catch (UriFormatException e)
+            catch (UriFormatException)
             {
                 await bot.SendTextMessageAsync(chatId, "Sorry, the link you sent me was invalid.");
                 return;
             }
-            catch (ArgumentException e)
+            catch (ArgumentException)
             {
-                await bot.SendTextMessageAsync(chatId, 
-                    "Sorry, I don't understand you.\n I _only_ understand links from **YouTube**", 
+                await bot.SendTextMessageAsync(chatId,
+                    "Sorry, I don't understand you.\n I _only_ understand links from **YouTube**",
                     ParseMode.Markdown);
                 return;
             }
@@ -113,8 +115,14 @@ namespace YouTubeBot.Controllers
             string fullUrl = "https://www." + update.Message.Text.StripUrl();
             string videoID = GetVideoID(fullUrl);
 
-            var links = await YoutubeVideoDownloader
-                .GetDownloadLinksAsync(videoDownloadSettings, videoID, () => OnNotLoading(chatId));
+            var links = await YoutubeVideoDownloader.GetDownloadLinksAsync(
+                    videoDownloadSettings,
+                    videoID,
+                    () => OnNotLoading(chatId),
+                    shortenLinks: true,
+                    bitLySettings: bitLySettings
+            );
+
 
             var response = ResponseFormatter.GetFormattedResponse(links);
 
@@ -123,17 +131,7 @@ namespace YouTubeBot.Controllers
                 await bot.SendTextMessageAsync(chatId, kv.Key, parseMode: ParseMode.Markdown, replyMarkup: kv.Value);
             }
 
-            // get video info - { title, thumbnail }
         }
-        // main logic here
-        // + resolve message type
-        // + get url
-        // get high quality thumbnail
-        // get title
-        // get download links
-        // format links
-        // send thumbnail, title, inline buttons;
-
 
         private void AssureValidYoutubeUrl(string link)
         {
@@ -188,9 +186,7 @@ namespace YouTubeBot.Controllers
         /// <param name="uriString"></param>
         private void AssureValidUri(string uriString)
         {
-            //Uri finalUri;
             bool result = Uri.TryCreate(uriString, UriKind.Absolute, out Uri finalUri)
-                //&& finalUri != null 
                 && (finalUri.Scheme == Uri.UriSchemeHttp || finalUri.Scheme == Uri.UriSchemeHttps);
             if (!result)
             {

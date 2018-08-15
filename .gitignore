@@ -265,3 +265,4 @@ appsettings.json
 Properties/
 [Tt][Oo][Dd][Oo].*
 local.json
+bitlySettings.json

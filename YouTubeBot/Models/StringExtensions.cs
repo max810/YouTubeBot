@@ -15,7 +15,7 @@ namespace YouTubeBot
                 RegexOptions.Compiled | RegexOptions.IgnoreCase)
                 .Last();
             // skip www.
-            rawAddress = Regex.Split(str, $@"^www.", RegexOptions.Compiled | RegexOptions.IgnoreCase)
+            rawAddress = Regex.Split(rawAddress, $@"^www.", RegexOptions.Compiled | RegexOptions.IgnoreCase)
                 .Last();
 
             return rawAddress; 

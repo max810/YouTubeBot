@@ -33,6 +33,7 @@ namespace YouTubeBot
             services.AddScoped<HttpClient>();
             services.Configure<LocalDebugConfig>(Configuration.GetSection("LocalDebug"));
             services.Configure<VideoDownloadConfig>(Configuration.GetSection("VideoDownloadConfig"));
+            services.Configure<BitLySettings>(Configuration.GetSection("BitLyConfig"));
 
             // not necessary, maybe i'll change Logging to smth else
             services.AddLogging(builder
@@ -45,7 +46,6 @@ namespace YouTubeBot
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            // Проверить, как будет работать inactivity interval
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

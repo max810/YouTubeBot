@@ -14,17 +14,15 @@ namespace YouTubeBot
     // choose between static methods with parameters or pass everything in constructor and save
     public static class YoutubeVideoDownloader
     {
-        public static event Action NotLoading;
-
-        // maybe private, will be used in
-        public static async Task<IEnumerable<FileDownloadLinks>> GetDownloadLinksAsync(VideoDownloadConfig config, string videoID, Action onNotLoading = null)
+        public static async Task<IEnumerable<FileDownloadLinks>> GetDownloadLinksAsync(VideoDownloadConfig config, string videoID, Action onNotLoading = null, bool shortenLinks = false, BitLySettings bitLySettings = null)
         {
-            var result = new List<FileDownloadLinks>();
+            List<FileDownloadLinks> result = new List<FileDownloadLinks>();
             var httpClient = new HttpClient();
 
             foreach (var provider in config.VideoProviders)
             {
-                var waitTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                result = new List<FileDownloadLinks>();
+                var waitTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(10));
                 string fullUrl = string.Format(provider.UrlFormat, videoID);
 
                 try
@@ -37,7 +35,7 @@ namespace YouTubeBot
                         var document = new HtmlDocument();
                         document.Load(await response.Content.ReadAsStreamAsync());
 
-                        foreach(var fileTypeInfo in provider.FileTypesInfo)
+                        foreach (var fileTypeInfo in provider.FileTypesInfo)
                         {
                             var links = new FileDownloadLinks()
                             {
@@ -46,7 +44,7 @@ namespace YouTubeBot
                             };
 
 
-                            foreach(var linkInfo in fileTypeInfo.DownloadLinksInfo)
+                            foreach (var linkInfo in fileTypeInfo.DownloadLinksInfo)
                             {
                                 string link = document
                                     .QuerySelector(linkInfo.DownloadCSSSelector)
@@ -58,6 +56,11 @@ namespace YouTubeBot
                                     .QuerySelector(linkInfo.FileSizeCSSSelector)
                                     .InnerText;
 
+                                if (shortenLinks)
+                                {
+                                    link = await BitLyApi.ShortenUrlAsync(link, bitLySettings);
+                                }
+
                                 links.DownloadLinks.Add(new DownloadLink(description, link, size));
                             }
 
@@ -66,7 +69,10 @@ namespace YouTubeBot
                                 result.Add(links);
                             }
                         }
+
+                        return result;
                     }
+
                 }
                 catch (HttpRequestException)
                 {

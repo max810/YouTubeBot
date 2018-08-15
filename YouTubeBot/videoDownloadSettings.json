@@ -3,43 +3,123 @@
 
     "VideoProviders": [
       {
-        "UrlFormat": "https://y2mate.com/ru/youtube/{0}",
+        "UrlFormat": "https://qdownloader.net/download?video=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D{0}",
         "FileTypesInfo": [
           {
-            "FileType": "mp4",
+            "FileType": "Mp4",
             "DownloadLinksInfo": [
               {
-                "DownloadCSSSelector": "720_download_selector",
-                "DescriptionCSSSelector": "720_description_selector",
-                "FileSizeCSSSelector": "720_filesize_selector"
+                "DownloadCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(1) > td:nth-child(4) > a[download]",
+                "DescriptionCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(1) > td:nth-child(1)",
+                "FileSizeCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(1) > td:nth-child(3)"
               },
               {
-                "DownloadCSSSelector": "480_download_selector",
-                "DescriptionCSSSelector": "480_description_selector",
-                "FileSizeCSSSelector": "480_filesize_selector"
-              }
-              // check for duplicate
-            ]
-          },
-          {
-            "FileType": "mp3",
-            "DownloadLinksInfo": [
+                "DownloadCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(2) > td:nth-child(4) > a[download]",
+                "DescriptionCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(2) > td:nth-child(1)",
+                "FileSizeCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(2) > td:nth-child(3)"
+              },
               {
-                "DownloadCSSSelector": "mp3_(128kbps)_download_selector",
-                "DescriptionCSSSelector": "mp3_(128kbps)_description_selector",
-                "FileSizeCSSSelector": "mp3_(128kbps)_filesize_selector"
+                "DownloadCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(3) > td:nth-child(4) > a[download]",
+                "DescriptionCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(3) > td:nth-child(1)",
+                "FileSizeCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(3) > td:nth-child(3)"
+              },
+              {
+                "DownloadCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(4) > td:nth-child(4) > a[download]",
+                "DescriptionCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(4) > td:nth-child(1)",
+                "FileSizeCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(4) > td:nth-child(3)"
               }
             ]
           }
+          //,
+          //{
+      //      "FileType": "Video only, no sound",
+      //      "DownloadLinksInfo": [
+      //        {
+      //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(1) > td:nth-child(4) > a[download]",
+      //          "DescriptionCSSSelector": ".downloadsTable:last-child tr:nth-child(1) > td:nth-child(1)",
+      //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(1) > td:nth-child(3)"
+      //        },
+      //        {
+      //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(2) > td:nth-child(4) > a[download]",
+      //          "DescriptionCSSSelector": ".downloadsTable:last-child tr:nth-child(2) > td:nth-child(1)",
+      //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(2) > td:nth-child(3)"
+      //        },
+      //        {
+      //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(3) > td:nth-child(4) > a[download]",
+      //          "DescriptionCSSSelector": ".downloadsTable:last-child tr:nth-child(3) > td:nth-child(1)",
+      //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(3) > td:nth-child(3)"
+      //        },
+      //        {
+      //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(4) > td:nth-child(4) > a[download]",
+      //          "DescriptionCSSSelector": ".downloadsTable:last-child tr:nth-child(4) > td:nth-child(1)",
+      //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(4) > td:nth-child(3)"
+      //        },
+      //        {
+      //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(5) > td:nth-child(4) > a[download]",
+      //          "DescriptionCSSSelector": ".downloadsTable:last-child tr:nth-child(5) > td:nth-child(1)",
+      //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(5) > td:nth-child(3)"
+      //        },
+      //        {
+      //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(6) > td:nth-child(4) > a[download]",
+      //          "DescriptionCSSSelector": ".downloadsTable:last-child tr:nth-child(6) > td:nth-child(1)",
+      //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(6) > td:nth-child(3)"
+      //        }
+      //        //#other > table > tbody > tr:nth-child(5) > td:nth-child(1)
+      //      ]
+      //    }
         ]
       }
-      // "https://qdownloader.net/download?video={0}";
-      // this is faster "https://qdownloader.net/download?video=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D";
       //,
-      //insert new provider here
-      // {"Name" : "providerName2", "FileTypesInfo" : []}
+      //{
+      //  "UrlFormat": "https://y2mate.com/ru/youtube/{0}",
+      //  "FileTypesInfo": [
+      //    {
+      //      "FileType": "mp4",
+      //      "DownloadLinksInfo": [
+      //        {
+      //          "DownloadCSSSelector": "#mp4 > table > tbody > tr:nth-child(1) > td:nth-child(3) > a",
+      //          "DescriptionCSSSelector": "#mp4 > table > tbody > tr:nth-child(1) > td:nth-child(1)",
+      //          "FileSizeCSSSelector": "#mp4 > table > tbody > tr:nth-child(1) > td:nth-child(2)"
+      //        },
+      //        {
+      //          "DownloadCSSSelector": "#mp4 > table > tbody > tr:nth-child(2) > td:nth-child(3) > a",
+      //          "DescriptionCSSSelector": "#mp4 > table > tbody > tr:nth-child(2) > td:nth-child(1)",
+      //          "FileSizeCSSSelector": "#mp4 > table > tbody > tr:nth-child(2) > td:nth-child(2)"
+      //        },
+      //        {
+      //          "DownloadCSSSelector": "#mp4 > table > tbody > tr:nth-child(3) > td:nth-child(3) > a",
+      //          "DescriptionCSSSelector": "#mp4 > table > tbody > tr:nth-child(3) > td:nth-child(1)",
+      //          "FileSizeCSSSelector": "#mp4 > table > tbody > tr:nth-child(3) > td:nth-child(2)"
+      //        },
+      //        {
+      //          "DownloadCSSSelector": "#mp4 > table > tbody > tr:nth-child(4) > td:nth-child(3) > a",
+      //          "DescriptionCSSSelector": "#mp4 > table > tbody > tr:nth-child(4) > td:nth-child(1)",
+      //          "FileSizeCSSSelector": "#mp4 > table > tbody > tr:nth-child(4) > td:nth-child(2)"
+      //        }
+      //      ]
+      //    },
+      //    {
+      //      "FileType": "mp3",
+      //      "DownloadLinksInfo": [
+      //        {
+      //          "DownloadCSSSelector": "#mp3 > table > tbody > tr:nth-child(1) > td:nth-child(3) > a",
+      //          "DescriptionCSSSelector": "#mp3 > table > tbody > tr:nth-child(1) > td:nth-child(1)",
+      //          "FileSizeCSSSelector": "#mp3 > table > tbody > tr:nth-child(1) > td:nth-child(2)"
+      //        }
+      //      ]
+      //    },
+      //    {
+      //      "FileType": "other",
+      //      "DownloadLinksInfo": [
+      //        {
+      //          "DownloadCSSSelector": "#other > table > tbody > tr:nth-child(5) > td:nth-child(3) > a",
+      //          "DescriptionCSSSelector": "#other > table > tbody > tr:nth-child(5) > td:nth-child(1)",
+      //          "FileSizeCSSSelector": "#other > table > tbody > tr:nth-child(5) > td:nth-child(2)"
+      //        }
+      //      ]
+      //    }
+      //  ]
       //}
     ]
-
   }
 }

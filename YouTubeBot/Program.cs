@@ -26,8 +26,9 @@ namespace YouTubeBot
                     // later ones will override earlier
                     config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
                     config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile($"local.json", optional: false); // bot settings - currently only token
-                    config.AddJsonFile("videoDownloadSettings.json", optional: false);
+                    config.AddJsonFile($"local.json", optional: false, reloadOnChange: true); // bot settings - currently only token
+                    config.AddJsonFile("videoDownloadSettings.json", optional: false, reloadOnChange: true);
+                    config.AddJsonFile("bitlySettings.json", optional: false, reloadOnChange: true);
                 })
                 .UseStartup<Startup>()
                 .Build();
