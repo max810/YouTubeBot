@@ -15,19 +15,19 @@ namespace YouTubeBot
         {
             var httpClient = new HttpClient();
 
-            string requestContent = $"{{ \"group_guid\": \"{settings.GroupGuid}\", \"domain\": \"{settings.Domain}\", \"long_url\": \"{longUrl}\" }}";
+            string requestBody = $"{{ \"group_guid\": \"{settings.GroupGuid}\", \"domain\": \"{settings.Domain}\", \"long_url\": \"{longUrl}\" }}";
 
-            var requestBody = new StringContent(requestContent);
+            var requestContent = new StringContent(requestBody);
 
             var requestMessage = new HttpRequestMessage(HttpMethod.Post,
                 new Uri("https://api-ssl.bitly.com/v4/shorten", UriKind.Absolute));
-            requestMessage.Content = requestBody;
+            requestMessage.Content = requestContent;
             requestMessage.Headers.Add("Authorization", settings.Authorization);
             requestMessage.Headers.Add("origin", "https://bitly.com");
             requestMessage.Headers.Add("referer", "https://bitly.com/");
 
-            requestBody.Headers.Remove("content-type");
-            requestBody.Headers.Add("content-type", "application/json");
+            requestContent.Headers.Remove("content-type");
+            requestContent.Headers.Add("content-type", "application/json");
 
             string res = await requestMessage.Content.ReadAsStringAsync();
 
@@ -37,12 +37,9 @@ namespace YouTubeBot
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                Regex linkRecordRegex = new Regex("\"link\":\"http:\\/\\/bit.ly\\/.{0,8}\"");
-                Match linkRecordFound = linkRecordRegex.Match(responseBody);
-                string linkRecord = linkRecordFound.Value;
-
-                Regex linkRegex = new Regex("http:\\/\\/bit\\.ly\\/.{0,8}");
-                Match linkFound = linkRegex.Match(linkRecord);
+                Regex linkRegex = new Regex("\"link\":\"(http:\\/\\/bit.ly\\/.{0,8})\"");
+                Match linkFound = linkRegex.Match(responseBody);
+                string link = linkFound.Groups[1].Value;
 
                 shortLink = linkFound.Value;
             }

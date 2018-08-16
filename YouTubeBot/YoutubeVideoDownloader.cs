@@ -50,7 +50,7 @@ namespace YouTubeBot
                                     .QuerySelector(linkInfo.DownloadCSSSelector)
                                     .GetAttributeValue("href", "error - failed getting href attribute");
                                 string description = document
-                                    .QuerySelector(linkInfo.DescriptionCSSSelector)
+                                    .QuerySelector(linkInfo.VideoQualityCSSSelector)
                                     .InnerText;
                                 string size = document
                                     .QuerySelector(linkInfo.FileSizeCSSSelector)

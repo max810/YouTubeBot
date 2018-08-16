@@ -10,63 +10,68 @@
             "DownloadLinksInfo": [
               {
                 "DownloadCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(1) > td:nth-child(4) > a[download]",
-                "DescriptionCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(1) > td:nth-child(1)",
+                "VideoQualityCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(1) > td:nth-child(1)",
                 "FileSizeCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(1) > td:nth-child(3)"
               },
               {
                 "DownloadCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(2) > td:nth-child(4) > a[download]",
-                "DescriptionCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(2) > td:nth-child(1)",
+                "VideoQualityCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(2) > td:nth-child(1)",
                 "FileSizeCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(2) > td:nth-child(3)"
-              },
+              }
+            ]
+          },
+          {
+            "FileType": "3gp",
+            "DownloadLinksInfo": [
               {
                 "DownloadCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(3) > td:nth-child(4) > a[download]",
-                "DescriptionCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(3) > td:nth-child(1)",
+                "VideoQualityCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(3) > td:nth-child(1)",
                 "FileSizeCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(3) > td:nth-child(3)"
               },
               {
                 "DownloadCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(4) > td:nth-child(4) > a[download]",
-                "DescriptionCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(4) > td:nth-child(1)",
+                "VideoQualityCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(4) > td:nth-child(1)",
                 "FileSizeCSSSelector": ".downloadsTable:nth-child(3) tr:nth-child(4) > td:nth-child(3)"
               }
             ]
           }
           //,
           //{
-      //      "FileType": "Video only, no sound",
-      //      "DownloadLinksInfo": [
-      //        {
-      //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(1) > td:nth-child(4) > a[download]",
-      //          "DescriptionCSSSelector": ".downloadsTable:last-child tr:nth-child(1) > td:nth-child(1)",
-      //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(1) > td:nth-child(3)"
-      //        },
-      //        {
-      //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(2) > td:nth-child(4) > a[download]",
-      //          "DescriptionCSSSelector": ".downloadsTable:last-child tr:nth-child(2) > td:nth-child(1)",
-      //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(2) > td:nth-child(3)"
-      //        },
-      //        {
-      //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(3) > td:nth-child(4) > a[download]",
-      //          "DescriptionCSSSelector": ".downloadsTable:last-child tr:nth-child(3) > td:nth-child(1)",
-      //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(3) > td:nth-child(3)"
-      //        },
-      //        {
-      //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(4) > td:nth-child(4) > a[download]",
-      //          "DescriptionCSSSelector": ".downloadsTable:last-child tr:nth-child(4) > td:nth-child(1)",
-      //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(4) > td:nth-child(3)"
-      //        },
-      //        {
-      //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(5) > td:nth-child(4) > a[download]",
-      //          "DescriptionCSSSelector": ".downloadsTable:last-child tr:nth-child(5) > td:nth-child(1)",
-      //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(5) > td:nth-child(3)"
-      //        },
-      //        {
-      //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(6) > td:nth-child(4) > a[download]",
-      //          "DescriptionCSSSelector": ".downloadsTable:last-child tr:nth-child(6) > td:nth-child(1)",
-      //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(6) > td:nth-child(3)"
-      //        }
-      //        //#other > table > tbody > tr:nth-child(5) > td:nth-child(1)
-      //      ]
-      //    }
+          //      "FileType": "Video only, no sound",
+          //      "DownloadLinksInfo": [
+          //        {
+          //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(1) > td:nth-child(4) > a[download]",
+          //          "VideoQualityCSSSelector": ".downloadsTable:last-child tr:nth-child(1) > td:nth-child(1)",
+          //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(1) > td:nth-child(3)"
+          //        },
+          //        {
+          //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(2) > td:nth-child(4) > a[download]",
+          //          "VideoQualityCSSSelector": ".downloadsTable:last-child tr:nth-child(2) > td:nth-child(1)",
+          //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(2) > td:nth-child(3)"
+          //        },
+          //        {
+          //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(3) > td:nth-child(4) > a[download]",
+          //          "VideoQualityCSSSelector": ".downloadsTable:last-child tr:nth-child(3) > td:nth-child(1)",
+          //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(3) > td:nth-child(3)"
+          //        },
+          //        {
+          //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(4) > td:nth-child(4) > a[download]",
+          //          "VideoQualityCSSSelector": ".downloadsTable:last-child tr:nth-child(4) > td:nth-child(1)",
+          //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(4) > td:nth-child(3)"
+          //        },
+          //        {
+          //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(5) > td:nth-child(4) > a[download]",
+          //          "VideoQualityCSSSelector": ".downloadsTable:last-child tr:nth-child(5) > td:nth-child(1)",
+          //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(5) > td:nth-child(3)"
+          //        },
+          //        {
+          //          "DownloadCSSSelector": ".downloadsTable:last-child tr:nth-child(6) > td:nth-child(4) > a[download]",
+          //          "VideoQualityCSSSelector": ".downloadsTable:last-child tr:nth-child(6) > td:nth-child(1)",
+          //          "FileSizeCSSSelector": ".downloadsTable:last-child tr:nth-child(6) > td:nth-child(3)"
+          //        }
+          //        //#other > table > tbody > tr:nth-child(5) > td:nth-child(1)
+          //      ]
+          //    }
         ]
       }
       //,
@@ -78,22 +83,22 @@
       //      "DownloadLinksInfo": [
       //        {
       //          "DownloadCSSSelector": "#mp4 > table > tbody > tr:nth-child(1) > td:nth-child(3) > a",
-      //          "DescriptionCSSSelector": "#mp4 > table > tbody > tr:nth-child(1) > td:nth-child(1)",
+      //          "VideoQualityCSSSelector": "#mp4 > table > tbody > tr:nth-child(1) > td:nth-child(1)",
       //          "FileSizeCSSSelector": "#mp4 > table > tbody > tr:nth-child(1) > td:nth-child(2)"
       //        },
       //        {
       //          "DownloadCSSSelector": "#mp4 > table > tbody > tr:nth-child(2) > td:nth-child(3) > a",
-      //          "DescriptionCSSSelector": "#mp4 > table > tbody > tr:nth-child(2) > td:nth-child(1)",
+      //          "VideoQualityCSSSelector": "#mp4 > table > tbody > tr:nth-child(2) > td:nth-child(1)",
       //          "FileSizeCSSSelector": "#mp4 > table > tbody > tr:nth-child(2) > td:nth-child(2)"
       //        },
       //        {
       //          "DownloadCSSSelector": "#mp4 > table > tbody > tr:nth-child(3) > td:nth-child(3) > a",
-      //          "DescriptionCSSSelector": "#mp4 > table > tbody > tr:nth-child(3) > td:nth-child(1)",
+      //          "VideoQualityCSSSelector": "#mp4 > table > tbody > tr:nth-child(3) > td:nth-child(1)",
       //          "FileSizeCSSSelector": "#mp4 > table > tbody > tr:nth-child(3) > td:nth-child(2)"
       //        },
       //        {
       //          "DownloadCSSSelector": "#mp4 > table > tbody > tr:nth-child(4) > td:nth-child(3) > a",
-      //          "DescriptionCSSSelector": "#mp4 > table > tbody > tr:nth-child(4) > td:nth-child(1)",
+      //          "VideoQualityCSSSelector": "#mp4 > table > tbody > tr:nth-child(4) > td:nth-child(1)",
       //          "FileSizeCSSSelector": "#mp4 > table > tbody > tr:nth-child(4) > td:nth-child(2)"
       //        }
       //      ]
@@ -103,7 +108,7 @@
       //      "DownloadLinksInfo": [
       //        {
       //          "DownloadCSSSelector": "#mp3 > table > tbody > tr:nth-child(1) > td:nth-child(3) > a",
-      //          "DescriptionCSSSelector": "#mp3 > table > tbody > tr:nth-child(1) > td:nth-child(1)",
+      //          "VideoQualityCSSSelector": "#mp3 > table > tbody > tr:nth-child(1) > td:nth-child(1)",
       //          "FileSizeCSSSelector": "#mp3 > table > tbody > tr:nth-child(1) > td:nth-child(2)"
       //        }
       //      ]
@@ -113,7 +118,7 @@
       //      "DownloadLinksInfo": [
       //        {
       //          "DownloadCSSSelector": "#other > table > tbody > tr:nth-child(5) > td:nth-child(3) > a",
-      //          "DescriptionCSSSelector": "#other > table > tbody > tr:nth-child(5) > td:nth-child(1)",
+      //          "VideoQualityCSSSelector": "#other > table > tbody > tr:nth-child(5) > td:nth-child(1)",
       //          "FileSizeCSSSelector": "#other > table > tbody > tr:nth-child(5) > td:nth-child(2)"
       //        }
       //      ]
