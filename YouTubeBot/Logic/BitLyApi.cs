@@ -37,11 +37,11 @@ namespace YouTubeBot
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                Regex linkRegex = new Regex("\"link\":\"(http:\\/\\/bit.ly\\/.{0,8})\"");
+                Regex linkRegex = new Regex("\"link\":\"(http:\\/\\/bit.ly\\/[A-z0-9]{1,10})\"");
                 Match linkFound = linkRegex.Match(responseBody);
                 string link = linkFound.Groups[1].Value;
 
-                shortLink = linkFound.Value;
+                shortLink = link;
             }
 
             return shortLink;
