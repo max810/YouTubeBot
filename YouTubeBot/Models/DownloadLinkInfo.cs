@@ -7,8 +7,9 @@ namespace YouTubeBot.Models
 {
     public class DownloadLinkInfo
     {
-        public string DownloadCSSSelector { get; set; }
         public string VideoQualityCSSSelector { get; set; }
+        public string FileFormatCSSSelector { get; set; }
         public string FileSizeCSSSelector { get; set; }
+        public string DownloadCSSSelector { get; set; }
     }
 }

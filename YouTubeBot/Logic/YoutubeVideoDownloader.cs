@@ -8,79 +8,81 @@ using YouTubeBot.ConfigurationProviders;
 using YouTubeBot.Models;
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
+using System.Net;
 
 namespace YouTubeBot
 {
     // choose between static methods with parameters or pass everything in constructor and save
     public static class YoutubeVideoDownloader
     {
-        public static async Task<IEnumerable<FileDownloadLinks>> GetDownloadLinksAsync(VideoDownloadConfig config, string videoID, Action onNotLoading = null, bool shortenLinks = false, BitLySettings bitLySettings = null)
+        public static async Task<IList<DownloadLink>> GetDownloadLinksAsync(
+            VideoDownloadConfig config,
+            string videoLink, 
+            Action onNotLoading = null,
+            bool shortenLinks = false,
+            BitLySettings bitLySettings = null)
         {
-            List<FileDownloadLinks> result = new List<FileDownloadLinks>();
+            List<DownloadLink> result = new List<DownloadLink>();
             var httpClient = new HttpClient();
+            var provider = config.VideoProvider;
+            // if we didn't get a response in 30 seconds, we throw sorry
+            var waitTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
-            foreach (var provider in config.VideoProviders)
+            string videoLinkEncoded = WebUtility.UrlEncode(videoLink);
+            string fullUrl = string.Format(provider.UrlFormat, videoLinkEncoded);
+
+            try
             {
-                result = new List<FileDownloadLinks>();
-                var waitTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(10));
-                string fullUrl = string.Format(provider.UrlFormat, videoID);
-
-                try
+                // will throw if cancelled
+                using (var response = await httpClient.GetAsync(fullUrl, waitTokenSource.Token))
                 {
-                    // will throw if cancelled
-                    using (var response = await httpClient.GetAsync(fullUrl, waitTokenSource.Token))
+                    response.EnsureSuccessStatusCode();
+
+                    var document = new HtmlDocument();
+                    document.Load(await response.Content.ReadAsStreamAsync());
+
+                    foreach (var linkInfo in provider.DownloadLinksInfo)
                     {
-                        response.EnsureSuccessStatusCode();
-
-                        var document = new HtmlDocument();
-                        document.Load(await response.Content.ReadAsStreamAsync());
-
-                        foreach (var fileTypeInfo in provider.FileTypesInfo)
+                        string link = null, quality = null, size = null, format = null;
+                        try
                         {
-                            var links = new FileDownloadLinks()
-                            {
-                                FileType = fileTypeInfo.FileType,
-                                DownloadLinks = new List<DownloadLink>()
-                            };
+                            quality = document
+                                .QuerySelector(linkInfo.VideoQualityCSSSelector)
+                                .InnerText;
+                            format = document
+                                .QuerySelector(linkInfo.FileFormatCSSSelector)
+                                .InnerText;
+                            size = document
+                                .QuerySelector(linkInfo.FileSizeCSSSelector)
+                                .InnerText;
 
-
-                            foreach (var linkInfo in fileTypeInfo.DownloadLinksInfo)
-                            {
-                                string link = document
-                                    .QuerySelector(linkInfo.DownloadCSSSelector)
-                                    .GetAttributeValue("href", "error - failed getting href attribute");
-                                string description = document
-                                    .QuerySelector(linkInfo.VideoQualityCSSSelector)
-                                    .InnerText;
-                                string size = document
-                                    .QuerySelector(linkInfo.FileSizeCSSSelector)
-                                    .InnerText;
-
-                                if (shortenLinks)
-                                {
-                                    link = await BitLyApi.ShortenUrlAsync(link, bitLySettings);
-                                }
-
-                                links.DownloadLinks.Add(new DownloadLink(description, link, size));
-                            }
-
-                            if (links.DownloadLinks.Any())
-                            {
-                                result.Add(links);
-                            }
+                            link = document
+                                .QuerySelector(linkInfo.DownloadCSSSelector)
+                                .GetAttributeValue("href", def: "error - failed getting href attribute");
+                        }
+                        catch (NullReferenceException)
+                        {
+                            continue;
                         }
 
-                        return result;
-                    }
+                        if (shortenLinks)
+                        {
+                            link = await BitLyApi.ShortenUrlAsync(link, bitLySettings);
+                        }
 
-                }
-                catch (HttpRequestException)
-                {
-                    if (waitTokenSource.Token.IsCancellationRequested)
-                    {
-                        onNotLoading?.Invoke();
+                        result.Add(new DownloadLink(quality, format, size, link));
                     }
-                    continue;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                if (waitTokenSource.Token.IsCancellationRequested)
+                {
+                    onNotLoading?.Invoke();
+                }
+                else
+                {
+                    throw;
                 }
             }
 

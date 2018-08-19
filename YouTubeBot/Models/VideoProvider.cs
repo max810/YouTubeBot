@@ -8,6 +8,6 @@ namespace YouTubeBot.Models
     public class VideoProvider
     {
         public string UrlFormat { get; set; }
-        public FileTypeInfo[] FileTypesInfo { get; set; }
+        public DownloadLinkInfo[] DownloadLinksInfo { get; set; }
     }
 }

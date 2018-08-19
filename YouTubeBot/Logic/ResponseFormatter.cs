@@ -10,7 +10,7 @@ namespace YouTubeBot
 {
     public static class ResponseFormatter
     {
-        public static IEnumerable<KeyValuePair<string, IReplyMarkup>> GetFormattedResponse(IEnumerable<FileDownloadLinks> downloadLinks)
+        public static IEnumerable<KeyValuePair<string, IReplyMarkup>> GetFormattedResponse(IEnumerable<DownloadLink> downloadLinks)
         {
             if (!downloadLinks.Any())
             {
@@ -18,42 +18,34 @@ namespace YouTubeBot
                 {
                     // 'try again (repeat)' button
                     new KeyValuePair<string, IReplyMarkup>(
-                        "Sorry, we couldn't find any video downloads", 
+                        "_Sorry, it looks like there are no download links available for this video =(_", 
                         InlineKeyboardMarkup.Empty())
                 };
             }
 
             var response = new List<KeyValuePair<string, IReplyMarkup>>();
 
-            foreach(var fileDownload in downloadLinks)
+            var fileTypes = downloadLinks.GroupBy(x => x.FileFormat);
+
+            foreach(var fileType in fileTypes)
             {
-                var markup = FormatLinks(fileDownload);
-                string messageText = $"Download **{fileDownload.FileType}**";
+                var markup = GetKeyboard(fileType);
+                string messageText = $"Download **{fileType.Key}**";
 
                 response.Add(new KeyValuePair<string, IReplyMarkup>(messageText, markup));
             }
 
-
-            // [optional] text: video metadata(title, length, date, channel) 
-            // text: Download in *MP4* 
-            // inlineButton (link or callback): __720p__
-            // inlineButton (link or callback): __480p__
-            // repeat
-
-            // if nothing - text: sorry
-            // inlineButton: Repeat [basically the same as /start, just ask for the url once again] 
-
             return response;
         }
 
-        public static IReplyMarkup FormatLinks(FileDownloadLinks downloadLinks)
+        public static IReplyMarkup GetKeyboard(IEnumerable<DownloadLink> downloadLinks)
         {
             List<List<InlineKeyboardButton>> keyboard = new List<List<InlineKeyboardButton>>();
-            foreach(var downloadLink in downloadLinks.DownloadLinks)
+            foreach(var downloadLink in downloadLinks)
             {
                 List<InlineKeyboardButton> keyboardRow = new List<InlineKeyboardButton>(1);
                 InlineKeyboardButton button = InlineKeyboardButton
-                    .WithUrl(downloadLink.Description + " " + downloadLink.EstimatedSize, downloadLink.Link);
+                    .WithUrl(downloadLink.Quality + " " + downloadLink.FileSize, downloadLink.Link);
 
                 keyboardRow.Add(button);
                 keyboard.Add(keyboardRow);

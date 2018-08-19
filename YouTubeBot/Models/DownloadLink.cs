@@ -7,20 +7,22 @@ namespace YouTubeBot.Models
 {
     public class DownloadLink
     {
-        public string Description { get; set; }
+        public string Quality { get; set; }
+        public string FileFormat { get; set; }
+        public string FileSize { get; set; }
         public string Link { get; set; }
-        public string EstimatedSize { get; set; }
 
         public DownloadLink()
         {
 
         }
 
-        public DownloadLink(string description, string link, string size)
+        public DownloadLink(string quality, string fileFormat, string fileSize, string link)
         {
-            Description = description;
+            Quality = quality;
+            FileFormat = fileFormat;
+            FileSize = fileSize;
             Link = link;
-            EstimatedSize = size;
         }
     }
 }
