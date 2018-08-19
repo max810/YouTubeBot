@@ -1,11 +1,11 @@
 ## YouTubeBot - download videos from YouTube with this simple Telegram bot.
-This is a bot for downloading videos from youtube.
+This is a bot for downloading videos from youtube. Simple as that ¯\\\_(ツ)\_/¯
 
 ## Usage
 
 Add this bot [@youtubedownloadvideos\_bot](https://t.me/youtubedownloadvideos_bot "t.me link").
 Send him the link to youtube video.
-You will receive download links in the form of Telegram ULR inline buttons.
+You will receive download links in the form of Telegram URL inline buttons.
 
 ![Screenshot with buttons](Images/ScreenshotResult.png)
 
